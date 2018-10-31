@@ -1,12 +1,21 @@
+/* This is the console excutable that makes use of the BullCow Class.
+This acts as the ciew in an MVC pattern, as is responsible for all
+user intertarction. For game logic see FBullCowGame class
+*/
+
 #include <iostream>
 #include <string>
 #include "FBullCowGame.h"
 
+using FText = std::string;
+using int32 = int;
+
 void PrintIntro();
 void PlayGame();
-std::string GetGuess();
+FText GetGuess();
 bool AskToPlayTheGame();
 
+FBullCowGame BCGame; //instance a new game
 
 int main()
 {
@@ -23,7 +32,7 @@ int main()
 // introduce the game
 void PrintIntro()
 {
-	constexpr int WORD_LENGTH = 9;
+	constexpr int32 WORD_LENGTH = 9;
 	std::cout << "Welcom to Bulls and Cows, a fun word game.\n";
 	std::cout << "Can you guyess the " << WORD_LENGTH;
 	std::cout << " letter Isogram I'm thinking of?\n";
@@ -34,33 +43,42 @@ void PrintIntro()
 
 void PlayGame()
 {
-	FBullCowGame BCGame; //instance of new game
+	BCGame.Reset();
+	int32 MaxTries = BCGame.GetMaxTries();
+
 	// loop for the number of turns asking for guesses
-	constexpr int NUMBER_OF_TURNS = 5;
-	for (int count = 1; count <= NUMBER_OF_TURNS; count++) {
-		std::string Guess = GetGuess();
+	// TODO chnage from for to while loop once we are vlaidating tries
+
+	for (int32 count = 1; count <= MaxTries; count++) {
+		FText Guess = GetGuess();  // TODO make loop checking vlaid
+
+		// Submit valid guess to the game
+		// Print the number of bulls and cows
+
+
 		std::cout << "Your guess was: " << Guess << std::endl;
-		if (count < NUMBER_OF_TURNS) {
-			std::cout << std::endl;
-		}
+		std::cout << std::endl;
 	}
+
+	// TODO summarise game
 }
 
 
 // get  a guess from the player
-std::string GetGuess()
+FText GetGuess()
 {
-	std::cout << "Enter your guess: ";
-	std::string Guess = "";
+	int32 CurrentTry = BCGame.GetCurrentTry();
+	std::cout << "Try " << CurrentTry << ". Enter your guess: ";
+	FText Guess = "";
 	std::getline(std::cin, Guess);
 	return Guess;
 }
 
 
 bool AskToPlayTheGame()
-{	
+{
 	std::cout << "Do you want to play again? (y/n)";
-	std::string Response = "";
+	FText Response = "";
 	std::getline(std::cin, Response);
 	return (Response[0] == 'y') || (Response[0] == 'Y');
 }
